@@ -34,6 +34,11 @@ export class SceneGraph {
         return null;
     }
 
+    public removeAnimatedSprite(sprite : AnimatedSprite) : void{
+        let index : number = this.animatedSprites.indexOf(sprite)
+        this.animatedSprites.splice(index, 1)
+    }
+
     /**
      * update
      * 
