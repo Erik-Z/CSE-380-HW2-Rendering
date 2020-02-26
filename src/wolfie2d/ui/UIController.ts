@@ -5,6 +5,7 @@ import {AnimatedSprite} from "../scene/sprite/AnimatedSprite"
 import {SceneGraph} from "../scene/SceneGraph"
 
 export class UIController {
+    private hoveredSprite : AnimatedSprite;
     private spriteToDrag : AnimatedSprite;
     private scene : SceneGraph;
     private dragOffsetX : number;
@@ -13,6 +14,7 @@ export class UIController {
     public constructor() {}
 
     public init(canvasId : string, initScene : SceneGraph) : void {
+        this.hoveredSprite = null
         this.spriteToDrag = null;
         this.scene = initScene;
         this.dragOffsetX = -1;
@@ -21,7 +23,22 @@ export class UIController {
         let canvas : HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(canvasId);
         canvas.addEventListener("mousedown", this.mouseDownHandler);
         canvas.addEventListener("mousemove", this.mouseMoveHandler);
+        canvas.addEventListener("mousemove", this.mouseHoverHandler);
         canvas.addEventListener("mouseup", this.mouseUpHandler);
+    }
+    //Mouse over details
+    public mouseHoverHandler = (event: MouseEvent) : void => {
+        let mousePressX : number = event.clientX;
+        let mousePressY : number = event.clientY;
+        let sprite : AnimatedSprite = this.scene.getSpriteAt(mousePressX, mousePressY);
+        if (sprite != null) {
+            // Show Details Of Sprite.
+            this.hoveredSprite = sprite
+        }
+    }
+    //Double click to delete sprites and scene objects
+    public mouseDoubleClickHandler = (event: MouseEvent) : void => {
+
     }
 
     public mouseDownHandler = (event : MouseEvent) : void => {

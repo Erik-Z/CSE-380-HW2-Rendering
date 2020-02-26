@@ -88,8 +88,12 @@ var AnimatedSpriteDemo = function () {
             var numSpritesText = new TextRenderer_1.TextToRender("Num Sprites", "", 20, 50, function () {
                 numSpritesText.text = "Number of Sprites: " + sceneGraph.getNumSprites();
             });
+            var sceneObjectDetailsText = new TextRenderer_1.TextToRender("Scene Object Details", "", 20, 75, function () {
+                sceneObjectDetailsText.text = "Scene Object Details";
+            });
             var textRenderer = game.getRenderingSystem().getTextRenderer();
             textRenderer.addTextToRender(numSpritesText);
+            textRenderer.addTextToRender(sceneObjectDetailsText);
         }
     }]);
 
@@ -2297,6 +2301,19 @@ var UIController = function () {
 
         _classCallCheck(this, UIController);
 
+        //Mouse over details
+        this.mouseHoverHandler = function (event) {
+            var mousePressX = event.clientX;
+            var mousePressY = event.clientY;
+            var sprite = _this.scene.getSpriteAt(mousePressX, mousePressY);
+            if (sprite != null) {
+                // Show Details Of Sprite.
+                console.log(sprite.getPosition().getX());
+                console.log(sprite.getPosition().getY());
+            }
+        };
+        //Double click to delete sprites and scene objects
+        this.mouseDoubleClickHandler = function (event) {};
         this.mouseDownHandler = function (event) {
             var mousePressX = event.clientX;
             var mousePressY = event.clientY;
@@ -2331,6 +2348,7 @@ var UIController = function () {
             var canvas = document.getElementById(canvasId);
             canvas.addEventListener("mousedown", this.mouseDownHandler);
             canvas.addEventListener("mousemove", this.mouseMoveHandler);
+            canvas.addEventListener("mousemove", this.mouseHoverHandler);
             canvas.addEventListener("mouseup", this.mouseUpHandler);
         }
     }]);

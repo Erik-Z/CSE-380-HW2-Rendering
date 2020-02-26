@@ -86,8 +86,12 @@ class AnimatedSpriteDemo {
         let numSpritesText = new TextToRender("Num Sprites", "", 20, 50, function() {
             numSpritesText.text = "Number of Sprites: " + sceneGraph.getNumSprites();
         });
+        let sceneObjectDetailsText = new TextToRender("Scene Object Details", "", 20, 75, function() {
+            sceneObjectDetailsText.text = "Scene Object Details \n" + "Pos X: " + "\n Pos Y";
+        });
         let textRenderer = game.getRenderingSystem().getTextRenderer();
         textRenderer.addTextToRender(numSpritesText);
+        textRenderer.addTextToRender(sceneObjectDetailsText);
     }
 }
 
