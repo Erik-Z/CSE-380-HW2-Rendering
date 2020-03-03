@@ -1,21 +1,26 @@
 import {SceneObject} from './SceneObject'
 import {AnimatedSprite} from './sprite/AnimatedSprite'
+import { CircleObject } from './sprite/CircleObject';
 
 export class SceneGraph {
     // AND ALL OF THE ANIMATED SPRITES, WHICH ARE NOT STORED
     // SORTED OR IN ANY PARTICULAR ORDER. NOTE THAT ANIMATED SPRITES
     // ARE SCENE OBJECTS
     private animatedSprites : Array<AnimatedSprite>;
+    private circleObjects: Array<CircleObject>;
 
     // SET OF VISIBLE OBJECTS, NOTE THAT AT THE MOMENT OUR
     // SCENE GRAPH IS QUITE SIMPLE, SO THIS IS THE SAME AS
     // OUR LIST OF ANIMATED SPRITES
     private visibleSet : Array<SceneObject>;
+    private circleVisibleSet : Array<SceneObject>;
 
     public constructor() {
         // DEFAULT CONSTRUCTOR INITIALIZES OUR DATA STRUCTURES
         this.animatedSprites = new Array();
         this.visibleSet = new Array();
+        this.circleObjects = new Array();
+        this.circleVisibleSet = new Array();
     }
 
     public getNumSprites() : number {
@@ -24,6 +29,10 @@ export class SceneGraph {
 
     public addAnimatedSprite(sprite : AnimatedSprite) : void {
         this.animatedSprites.push(sprite);
+    }
+
+    public addCircleObject(sprite : CircleObject) : void {
+        this.circleObjects.push(sprite);
     }
 
     public getSpriteAt(testX : number, testY : number) : AnimatedSprite {
@@ -64,5 +73,17 @@ export class SceneGraph {
         }
 
         return this.visibleSet;
+    }
+
+    public circleScope() : Array<SceneObject> {
+        // CLEAR OUT THE OLD
+        this.circleVisibleSet = [];
+
+        // PUT ALL THE SCENE OBJECTS INTO THE VISIBLE SET
+        for (let sprite of this.circleObjects) {
+            this.circleVisibleSet.push(sprite);
+        }
+
+        return this.circleVisibleSet;
     }
 }

@@ -25,20 +25,26 @@ export class UIController {
         canvas.addEventListener("mousemove", this.mouseMoveHandler);
         canvas.addEventListener("mousemove", this.mouseHoverHandler);
         canvas.addEventListener("mouseup", this.mouseUpHandler);
+        canvas.addEventListener("dblclick", this.mouseDoubleClickHandler);
+    }
+    public getHoveredSprite() : AnimatedSprite {
+        return this.hoveredSprite;
     }
     //Mouse over details
     public mouseHoverHandler = (event: MouseEvent) : void => {
+        let mouseLocationX : number = event.clientX;
+        let mouseLocationY : number = event.clientY;
+        this.hoveredSprite = this.scene.getSpriteAt(mouseLocationX, mouseLocationY);
+    }
+    //Double click to delete sprites and scene objects
+    public mouseDoubleClickHandler = (event: MouseEvent) : void => {
         let mousePressX : number = event.clientX;
         let mousePressY : number = event.clientY;
         let sprite : AnimatedSprite = this.scene.getSpriteAt(mousePressX, mousePressY);
         if (sprite != null) {
             // Show Details Of Sprite.
-            this.hoveredSprite = sprite
+            this.scene.removeAnimatedSprite(sprite)
         }
-    }
-    //Double click to delete sprites and scene objects
-    public mouseDoubleClickHandler = (event: MouseEvent) : void => {
-
     }
 
     public mouseDownHandler = (event : MouseEvent) : void => {
@@ -48,11 +54,14 @@ export class UIController {
         console.log("mousePressX: " + mousePressX);
         console.log("mousePressY: " + mousePressY);
         console.log("sprite: " + sprite);
+        console.log("hoveredSprite: " + this.hoveredSprite);
         if (sprite != null) {
             // START DRAGGING IT
             this.spriteToDrag = sprite;
             this.dragOffsetX = sprite.getPosition().getX() - mousePressX;
             this.dragOffsetY = sprite.getPosition().getY() - mousePressY;
+        } else {
+            //Add a new scene object.
         }
     }
     

@@ -10,6 +10,7 @@ import {SceneGraph} from './scene/SceneGraph'
 import {AnimatedSprite} from './scene/sprite/AnimatedSprite'
 import {ResourceManager} from './files/ResourceManager'
 import {UIController} from './ui/UIController'
+import { CircleObject } from './scene/sprite/CircleObject'
 
 export class Game extends GameLoopTemplate {
     private resourceManager : ResourceManager = new ResourceManager();
@@ -33,6 +34,10 @@ export class Game extends GameLoopTemplate {
         return this.sceneGraph;
     }
 
+    public getUIController() : UIController {
+        return this.uiController;
+    }
+
     public init(gameCanvasId : string, textCanvasId : string) : void {
         this.renderingSystem.init(gameCanvasId, textCanvasId);
         this.uiController.init(gameCanvasId, this.sceneGraph);
@@ -50,8 +55,11 @@ export class Game extends GameLoopTemplate {
         let visibleSprites : Array<AnimatedSprite>;
         visibleSprites = <Array<AnimatedSprite>>this.sceneGraph.scope();
 
+        let visibleCircleSprites: Array<CircleObject>
+        visibleCircleSprites = <Array<CircleObject>>this.sceneGraph.circleScope();
+
         // RENDER THE VISIBLE SET, WHICH SHOULD ALL BE RENDERABLE
-        this.renderingSystem.render(visibleSprites);
+        this.renderingSystem.render(visibleSprites, visibleCircleSprites);
     }
 
     /**
