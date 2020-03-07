@@ -37,6 +37,8 @@ export class GradientCircleRenderer {
     public constructor() {}
     
     public init(webGL : WebGLRenderingContext) : void {
+        var colors : Array<Array<number>> = [[255, 255], [255,0]]
+        var randInt : number = Math.floor(Math.random() * 2);
         this.shader = new WebGLGameShader();
         var vertexShaderSource =
         'precision highp float;\n' +   
@@ -51,6 +53,9 @@ export class GradientCircleRenderer {
         var fragmentShaderSource = 
             'precision highp float;\n'+
             'varying vec2 val;\n'+
+            'uniform int value1;\n'+
+            'uniform int value2;\n'+
+            'uniform int value3;\n' +
             'void main() {\n' +
             '  float R = 0.5;\n' +
             '  float dist = sqrt(dot(val,val));\n' +
@@ -58,7 +63,38 @@ export class GradientCircleRenderer {
             '  if (dist > R) {\n' +
             '    discard;\n' +
             '  }\n' +
-            '  gl_FragColor = vec4(100.0, 0.0, dist, alpha);\n' +  // Set the color   
+            // '  if (value1 == 0) {\n' +
+            // '      gl_FragColor = vec4(dist, value2, value3, alpha);\n' +
+            // '  }\n' +
+            // '  if (value2 == 0) {\n' +
+            // '      gl_FragColor = vec4(value1, dist, value3, alpha);\n' +
+            // '  }\n' +
+            // '  if (value3 == 0) {\n' +
+            // '      gl_FragColor = vec4(value1, value2, dist, alpha);\n' +
+            // '  }\n' +
+            '  if (value1 == 0){\n'+
+            '    if (value3 == 0){\n'+
+            '      gl_FragColor = vec4(value1, dist, value3, alpha);\n' +
+            '    }\n' +
+            '    else if (value2 == 0){\n'+
+            '      gl_FragColor = vec4(value1, value2, dist, alpha);\n' +
+            '    }\n' +
+            '    else if (value1 == 0){\n'+
+            '      gl_FragColor = vec4(value1, dist, dist, alpha);\n' +
+            '    }\n' +
+            '  }\n' +
+            '  else if (value2 == 0){\n'+
+            '    if (value3 == 0){\n'+
+            '      gl_FragColor = vec4(dist, value2, value3, alpha);\n' +
+            '    }\n' +
+            '    else if (value2 == 0){\n'+
+            '      gl_FragColor = vec4(dist, value2, dist, alpha);\n' +
+            '    }\n' +
+            '  }\n' +
+            '  else if (value3 == 0){\n'+
+            '    gl_FragColor = vec4(dist, dist, value3, alpha);\n' +
+            '  }\n' +
+            // '  gl_FragColor = vec4(value1, value2, dist, alpha);\n' +  // Set the color   
             '}\n';
         this.shader.init(webGL, vertexShaderSource, fragmentShaderSource)
         var verticesTexCoords = new Float32Array([
@@ -76,7 +112,7 @@ export class GradientCircleRenderer {
         this.webGLAttributeLocations = {};
         this.webGLUniformLocations = {};
         this.loadAttributeLocations(webGL, ['a_Position', 'a_ValueToInterpolate']);
-        this.loadUniformLocations(webGL, ['u_SpriteTransform']);
+        this.loadUniformLocations(webGL, ['u_SpriteTransform', 'value1', 'value2', 'value3']);
 
         // WE'LL USE THESE FOR TRANSOFMRING OBJECTS WHEN WE DRAW THEM
         this.circleTransform = new Matrix(4, 4);
@@ -157,7 +193,12 @@ export class GradientCircleRenderer {
         // USE THE UNIFORMS
         let u_SpriteTransformLocation : WebGLUniformLocation = this.webGLUniformLocations['u_SpriteTransform'];
         webGL.uniformMatrix4fv(u_SpriteTransformLocation, false, this.circleTransform.getData());
-    
+        let u_value1 : WebGLUniformLocation = this.webGLUniformLocations['value1'];
+        webGL.uniform1i(u_value1, circle.getColor()[0]);
+        let u_value2 : WebGLUniformLocation = this.webGLUniformLocations['value2'];
+        webGL.uniform1i(u_value2, circle.getColor()[1]);
+        let u_value3 : WebGLUniformLocation = this.webGLUniformLocations['value3'];
+        webGL.uniform1i(u_value3, circle.getColor()[2]);
         // DRAW THE SPRITE AS A TRIANGLE STRIP USING 4 VERTICES, STARTING AT THE START OF THE ARRAY (index 0)
         webGL.drawArrays(webGL.TRIANGLE_STRIP, SpriteDefaults.INDEX_OF_FIRST_VERTEX, SpriteDefaults.NUM_VERTICES);
     }

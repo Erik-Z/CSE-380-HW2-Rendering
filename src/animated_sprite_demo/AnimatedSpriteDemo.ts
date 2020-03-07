@@ -79,7 +79,7 @@ class AnimatedSpriteDemo {
             }
         }
         for(let i = 0; i < 5; i++){
-            let spriteToAdd : CircleObject = new CircleObject()
+            let spriteToAdd : CircleObject = new CircleObject(Math.floor(Math.random() * 6))
             let randomX : number = Math.floor(Math.random() * canvasWidth) - (spriteToAdd.getWidth()/2);
             let randomY : number = Math.floor(Math.random() * canvasHeight) - (spriteToAdd.getHeight()/2);
             spriteToAdd.getPosition().set(randomX, randomY, 0.0, 1.0);
@@ -93,15 +93,19 @@ class AnimatedSpriteDemo {
     private buildText(game : Game) {
         let sceneGraph : SceneGraph = game.getSceneGraph();
         let uiController : UIController = game.getUIController();
-        let hoveredSprite = uiController.getHoveredSprite()
+        let hoveredSprite : AnimatedSprite = uiController.getHoveredSprite();
+        let hoveredCircle : CircleObject = uiController.getHoveredCircle();
         console.log("build Text called")
         let numSpritesText = new TextToRender("Num Sprites", "", 20, 50, function() {
             numSpritesText.text = "Number of Sprites: " + sceneGraph.getNumSprites();
         });
         let sceneObjectDetailsText = new TextToRender("Scene Object Details", "", 20, 75, function() {
             hoveredSprite = uiController.getHoveredSprite();
+            hoveredCircle = uiController.getHoveredCircle();
             if(hoveredSprite != null){
-                sceneObjectDetailsText.text = "Scene Object Details " + "Pos X: " + hoveredSprite.getPosition().getX() + " Pos Y: " + hoveredSprite.getPosition().getY();
+                sceneObjectDetailsText.text = hoveredSprite.toString();
+            } else if(hoveredCircle != null){
+                sceneObjectDetailsText.text = hoveredCircle.toString();
             }
         });
         

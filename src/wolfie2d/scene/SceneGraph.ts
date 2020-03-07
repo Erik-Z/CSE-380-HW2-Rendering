@@ -24,7 +24,7 @@ export class SceneGraph {
     }
 
     public getNumSprites() : number {
-        return this.animatedSprites.length;
+        return this.animatedSprites.length + this.circleObjects.length;
     }
 
     public addAnimatedSprite(sprite : AnimatedSprite) : void {
@@ -43,9 +43,22 @@ export class SceneGraph {
         return null;
     }
 
+    public getCircleObjectAt(testX: number, testY: number): CircleObject{
+        for(let sprite of this.circleObjects){
+            if(sprite.contains(testX, testY)){
+                return sprite;
+            }
+        }
+    }
+
     public removeAnimatedSprite(sprite : AnimatedSprite) : void{
         let index : number = this.animatedSprites.indexOf(sprite)
         this.animatedSprites.splice(index, 1)
+    }
+
+    public removeCircleObject(sprite : CircleObject) : void {
+        let index : number = this.circleObjects.indexOf(sprite)
+        this.circleObjects.splice(index, 1)
     }
 
     /**
